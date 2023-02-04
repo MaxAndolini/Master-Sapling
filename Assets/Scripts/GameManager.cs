@@ -47,6 +47,9 @@ public class GameManager : MonoBehaviour
 
     public void StartButton()
     {
+        AudioManager.Instance.StopMainMenuMusic();
+        AudioManager.Instance.PlayInGameMusic();
+        AudioManager.Instance.PlaySound("UIClick");
         mainPanel.SetActive(false);
         pausePanel.SetActive(false);
         gamePanel.SetActive(true);
@@ -60,10 +63,12 @@ public class GameManager : MonoBehaviour
         pauseMusicSprite.sprite = musicOn ? musicOnSprite : musicOffSprite;
         AudioManager.Instance.Mute(!musicOn);
         PlayerPrefs.SetInt("Music", musicOn ? 1 : 0);
+        AudioManager.Instance.PlaySound("UIClick");
     }
 
     public void PauseButton()
     {
+        AudioManager.Instance.PlaySound("UIOpen");
         mainPanel.SetActive(false);
         pausePanel.SetActive(true);
         gamePanel.SetActive(false);
@@ -72,22 +77,28 @@ public class GameManager : MonoBehaviour
 
     public void HomeButton()
     {
+        AudioManager.Instance.StopInGameMusic();
+        AudioManager.Instance.PlayMainMenuMusic();
+        AudioManager.Instance.PlaySound("UIClick");
         gameOver = false;
         ScoreChange(0);
         mainPanel.SetActive(true);
         pausePanel.SetActive(false);
         gamePanel.SetActive(false);
         overPanel.SetActive(false);
+        AudioManager.Instance.PlaySound("UIOpen");
     }
 
     public void RestartButton()
     {
+        AudioManager.Instance.PlaySound("UIClick");
         gameOver = false;
         ScoreChange(0);
     }
 
     public void UnPauseButton()
     {
+        AudioManager.Instance.PlaySound("UIClose");
         mainPanel.SetActive(false);
         pausePanel.SetActive(false);
         gamePanel.SetActive(true);

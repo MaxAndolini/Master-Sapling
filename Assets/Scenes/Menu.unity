@@ -2399,13 +2399,13 @@ MonoBehaviour:
   mainMenuMusic:
     name: MainMenu
     clip: {fileID: 8300000, guid: 2eea5e5d0664f471cbe547d1fac7ca5e, type: 3}
-    volume: 1
+    volume: 0.6
     pitch: 1
     loop: 1
   inGameMusic:
     name: InGame
     clip: {fileID: 8300000, guid: 4d0d13782f7ad4135bce7584960b10ab, type: 3}
-    volume: 1
+    volume: 0.5
     pitch: 1
     loop: 1
 --- !u!1 &1312038347

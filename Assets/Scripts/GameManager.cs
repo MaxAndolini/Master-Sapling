@@ -5,11 +5,13 @@ public class GameManager : MonoBehaviour
 {
     public GameObject rootMan;
     public GameObject tree;
-    public int numberOfRoots = 2;
+    public int numberOfRoots = 3;
     public bool musicOn;
     public bool gameOver;
-    public bool paused = false;
+    public bool paused;
+    public int level = 1;
     public int health = 100;
+    public float damagePersentage = 1f;
     public int score;
     public GameObject mainPanel;
     public GameObject pausePanel;
@@ -50,7 +52,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && !paused)
             if (numberOfRoots != 0)
             {
-                //rootman_sound.Play();
+                AudioManager.Instance.PlaySound("Yoddle");
                 var treePos = tree.transform.position;
                 Instantiate(rootMan, new Vector3(treePos.x, treePos.y, treePos.z + 1.0f), Quaternion.identity);
                 numberOfRoots--;
@@ -109,8 +111,20 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.PlayInGameMusic();
         AudioManager.Instance.PlaySound("UIClick");
         gameOver = false;
+
+        var enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (var enemy in enemies) Destroy(enemy);
+
+        var rootmans = GameObject.FindGameObjectsWithTag("Rootman");
+        foreach (var rootman in rootmans) Destroy(rootman);
+
         ScoreChange(0);
-        ResumeGame();
+        ChangeLevel(1);
+        numberOfRoots = 4;
+        health = 100;
+        healthbar.UpdateBar(health);
+        UnPauseButton();
+        tree.GetComponent<PlayerController>().ResetPosition();
     }
 
     public void UnPauseButton()
@@ -129,10 +143,11 @@ public class GameManager : MonoBehaviour
         gameScoreText.text = score.ToString();
         overScoreText.text = score.ToString();
     }
-    
+
     public void ScoreAdd(int newScore)
     {
         score += newScore;
+        AudioManager.Instance.PlaySound("Coin");
         gameScoreText.text = score.ToString();
         overScoreText.text = score.ToString();
     }
@@ -153,13 +168,13 @@ public class GameManager : MonoBehaviour
         gamePanel.SetActive(false);
         overPanel.SetActive(true);
     }
-    
+
     public void PauseGame()
     {
         paused = true;
         Time.timeScale = 0;
     }
-    
+
     public void ResumeGame()
     {
         paused = false;
@@ -169,7 +184,13 @@ public class GameManager : MonoBehaviour
     public void DecreaseHealth()
     {
         health -= 20;
+        AudioManager.Instance.PlaySound("DeathSlow");
         if (health > 0) healthbar.UpdateBar(health);
         else GameOver();
+    }
+
+    public void ChangeLevel(int selectLevel)
+    {
+        level = selectLevel;
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,28 +7,24 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private Sound mainMenuMusic;
     [SerializeField] private Sound inGameMusic;
 
-    private Dictionary<string, AudioSource> audioSources = new Dictionary<string, AudioSource>();
+    private readonly Dictionary<string, AudioSource> audioSources = new();
     private Sound currentMusic;
 
     public static AudioManager Instance { get; private set; }
-    
+
     private void Awake()
     {
-        if (Instance != null && Instance != this) 
-        { 
-            Destroy(this); 
-        } 
-        else 
-        { 
-            Instance = this; 
-        }
-        
-        foreach (Sound sound in sounds)
+        if (Instance != null && Instance != this)
+            Destroy(this);
+        else
+            Instance = this;
+
+        foreach (var sound in sounds)
         {
-            GameObject soundGO = new GameObject("Sound_" + sound.name);
+            var soundGO = new GameObject("Sound_" + sound.name);
             soundGO.transform.parent = transform;
 
-            AudioSource audioSource = soundGO.AddComponent<AudioSource>();
+            var audioSource = soundGO.AddComponent<AudioSource>();
             audioSource.clip = sound.clip;
             audioSource.volume = sound.volume;
             audioSource.pitch = sound.pitch;
@@ -62,7 +57,7 @@ public class AudioManager : MonoBehaviour
         audioSources["MainMenuMusic"].Stop();
         currentMusic = null;
     }
-    
+
     public void StopInGameMusic()
     {
         audioSources["InGameMusic"].Stop();
@@ -73,7 +68,7 @@ public class AudioManager : MonoBehaviour
     {
         if (music == currentMusic) return;
 
-        AudioSource audioSource = audioSources[audioSourceName];
+        var audioSource = audioSources[audioSourceName];
         audioSource.Stop();
         audioSource.clip = music.clip;
         audioSource.volume = music.volume;
@@ -85,15 +80,17 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(string name)
     {
-        if (!audioSources.TryGetValue(name, out AudioSource audioSource))
+        if (!audioSources.TryGetValue(name, out var audioSource))
         {
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
+
         audioSource.Play();
     }
-    
-    public void Mute(bool isMute){
-        AudioListener.volume =  isMute ? 0 : 1;
+
+    public void Mute(bool isMute)
+    {
+        AudioListener.volume = isMute ? 0 : 1;
     }
 }

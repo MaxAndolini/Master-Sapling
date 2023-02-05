@@ -12,25 +12,13 @@ public class EnemyController : MonoBehaviour
     private bool isHit = true;
     private ParticleSystem particle;
     private GameObject rootman;
-
-    // Start is called before the first frame update
+    
     private void Start()
     {
         tree = GameObject.Find("Tree");
         healthbar.UpdateBar(100);
-        /*if (gameObject.name.IndexOf("Flame", StringComparison.OrdinalIgnoreCase))
-        {
-            var gameParticle = gameObject.transform.Find("Particle");
-            Debug.Log(gameParticle);
-            if (gameParticle)
-            {
-                particle = gameParticle.GetComponent<ParticleSystem>();
-                particle.Stop();
-            }
-        }*/
     }
-
-    // Update is called once per frame
+    
     private void Update()
     {
         if (!isAttack)
@@ -52,7 +40,7 @@ public class EnemyController : MonoBehaviour
     {
         isAttack = false;
     }
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
@@ -99,7 +87,6 @@ public class EnemyController : MonoBehaviour
                     {
                         if (enemyDead)
                         {
-                            Debug.Log("enemy go yok 2");
                             animator.SetBool("attack", false);
                             animator.SetBool("run", true);
                             isAttack = false;
@@ -109,7 +96,7 @@ public class EnemyController : MonoBehaviour
                         {
                             health -= 25;
                             isHit = false;
-                            Debug.Log("health: " + health);
+                            AudioManager.Instance.PlaySound("Grauh");
                             healthbar.UpdateBar(health);
                             if (health > 0)
                                 StartCoroutine(WaitForHit(1.5f, go));
@@ -139,6 +126,7 @@ public class EnemyController : MonoBehaviour
     public void Death()
     {
         isDead = true;
+        AudioManager.Instance.PlaySound("Droplet2");
         Destroy(gameObject);
     }
 }

@@ -1,14 +1,11 @@
-using System;
 using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class SpawnController : MonoBehaviour
 {
-    private Vector3[] spawnPoints = new Vector3[5];
-
     public GameObject[] enemyPrefab;
     public bool flag;
+    private readonly Vector3[] spawnPoints = new Vector3[5];
 
     private void Start()
     {
@@ -35,6 +32,7 @@ public class SpawnController : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         var randEnemy = Random.Range(0, enemyPrefab.Length);
         var randSpawnPoint = Random.Range(0, spawnPoints.Length);
+        AudioManager.Instance.PlaySound("Droplet");
         Instantiate(enemyPrefab[randEnemy], spawnPoints[randSpawnPoint], Quaternion.Euler(new Vector3(0, 180, 0)));
         flag = false;
     }

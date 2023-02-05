@@ -2,13 +2,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 10.0f;
-    private int position = 3;
-    private Vector3[] points = new Vector3[5];
-    private bool level2 = false;
-    private bool level3 = false;
     public GameObject effect;
-    void Start()
+    private readonly Vector3[] points = new Vector3[5];
+    private int position = 2;
+
+    private void Start()
     {
         // Initialize the position of the 5 points
         points[0] = new Vector3(98.0f, 102.0f, 75.0f);
@@ -21,40 +19,46 @@ public class PlayerController : MonoBehaviour
         transform.position = points[position];
     }
 
-    void Update()
+    private void Update()
     {
         if (!GameManager.Instance.paused)
         {
             if (Input.GetKeyDown(KeyCode.D))
-            {
                 if (position < 4)
                 {
                     position++;
                     transform.position = points[position];
                 }
-            }
 
             if (Input.GetKeyDown(KeyCode.A))
-            {
                 if (position > 0)
                 {
                     position--;
                     transform.position = points[position];
                 }
-            }
 
-            if (GameManager.Instance.score >= 500 && !level2)
+            if (GameManager.Instance.score >= 1000 && GameManager.Instance.level != 2)
             {
                 Instantiate(effect, transform.position, Quaternion.identity);
                 GameManager.Instance.numberOfRoots += 2;
-                level2 = true;
+                GameManager.Instance.damagePersentage *= 1.5f;
+                GameManager.Instance.ChangeLevel(2);
+                AudioManager.Instance.PlaySound("PowerUpLong");
             }
-            else if (GameManager.Instance.score >= 1000 && !level3)
+            else if (GameManager.Instance.score >= 3000 && GameManager.Instance.level != 3)
             {
                 Instantiate(effect, transform.position, Quaternion.identity);
                 GameManager.Instance.numberOfRoots += 2;
-                level3 = true;
+                GameManager.Instance.damagePersentage *= 1.5f;
+                GameManager.Instance.ChangeLevel(3);
+                AudioManager.Instance.PlaySound("PowerUpLong");
             }
         }
+    }
+
+    public void ResetPosition()
+    {
+        position = 2;
+        transform.position = points[position];
     }
 }

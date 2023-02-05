@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class RootManController : MonoBehaviour
 {
-    public int health = 100;
+    public float health = 100f;
     public GameObject tree;
     bool isHit = true;
     public bool isDead = false;
@@ -19,9 +19,6 @@ public class RootManController : MonoBehaviour
     {
      tree = GameObject.Find("Tree");
      healthbar.UpdateBar(100);
-
-     Debug.Log(gameObject.name);
-     //pain_sound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -93,10 +90,9 @@ public class RootManController : MonoBehaviour
                     }
                     else
                     {
-                        health -= 20;
+                        health -= 20 * GameManager.Instance.damagePersentage;
                         isHit = false;
-
-                        //pain_sound.Play();
+                        AudioManager.Instance.PlaySound("Grauh");
                         healthbar.UpdateBar(health);
                         StartCoroutine(WaitForHit(1.5f, other));
 
@@ -112,7 +108,7 @@ public class RootManController : MonoBehaviour
     {
         isDead = true;
         GameManager.Instance.AddNumberOfRoots();
-        Debug.Log("Death");
+        AudioManager.Instance.PlaySound("Ay");
         Destroy(gameObject);
     }
 }

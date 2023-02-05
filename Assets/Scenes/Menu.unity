@@ -2396,6 +2396,11 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
+  - name: GameOverUgh
+    clip: {fileID: 8300000, guid: 1491c3f44bf054d6a850949988c1d46a, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
   mainMenuMusic:
     name: MainMenu
     clip: {fileID: 8300000, guid: 2eea5e5d0664f471cbe547d1fac7ca5e, type: 3}

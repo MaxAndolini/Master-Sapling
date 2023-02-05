@@ -91,6 +91,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartButton()
     {
+        AudioManager.Instance.PlayInGameMusic();
         AudioManager.Instance.PlaySound("UIClick");
         gameOver = false;
         ScoreChange(0);
@@ -114,6 +115,8 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        AudioManager.Instance.StopInGameMusic();
+        AudioManager.Instance.PlaySound("GameOverUgh");
         gameOver = true;
         mainPanel.SetActive(false);
         pausePanel.SetActive(false);

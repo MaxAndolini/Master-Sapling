@@ -60,11 +60,13 @@ public class AudioManager : MonoBehaviour
     public void StopMainMenuMusic()
     {
         audioSources["MainMenuMusic"].Stop();
+        currentMusic = null;
     }
     
     public void StopInGameMusic()
     {
         audioSources["InGameMusic"].Stop();
+        currentMusic = null;
     }
 
     private void PlayMusic(Sound music, string audioSourceName)

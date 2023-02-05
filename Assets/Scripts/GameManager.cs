@@ -1,13 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public bool musicOn = false;
-    public bool gameOver = false;
-    public int score = 0;
+    public GameObject rootMan;
+    public GameObject tree;
+    public int numberOfRoots = 2;
+    public bool musicOn;
+    public bool gameOver;
+    public int score;
     public GameObject mainPanel;
     public GameObject pausePanel;
     public GameObject gamePanel;
@@ -20,29 +21,35 @@ public class GameManager : MonoBehaviour
     public Text overScoreText;
 
     public static GameManager Instance { get; private set; }
-    private void Awake() 
+
+    private void Awake()
     {
-        if (Instance != null && Instance != this) 
-        { 
-            Destroy(this); 
-        } 
-        else 
-        { 
-            Instance = this; 
-        }
+        if (Instance != null && Instance != this)
+            Destroy(this);
+        else
+            Instance = this;
+
+        tree = GameObject.FindWithTag("Player");
     }
-    
-    void Start()
+
+    private void Start()
     {
         musicOn = PlayerPrefs.GetInt("Music", 1) == 1;
         musicSprite.sprite = musicOn ? musicOnSprite : musicOffSprite;
         pauseMusicSprite.sprite = musicOn ? musicOnSprite : musicOffSprite;
         AudioManager.Instance.Mute(!musicOn);
     }
-    
-    void Update()
+
+    private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+            if (numberOfRoots != 0)
+            {
+                //rootman_sound.Play();
+                var treePos = tree.transform.position;
+                Instantiate(rootMan, new Vector3(treePos.x, 0.5f, treePos.z - 1.0f), Quaternion.Euler(0f, 180f, 0f));
+                numberOfRoots--;
+            }
     }
 
     public void StartButton()
@@ -109,6 +116,13 @@ public class GameManager : MonoBehaviour
     public void ScoreChange(int newScore)
     {
         score = newScore;
+        gameScoreText.text = score.ToString();
+        overScoreText.text = score.ToString();
+    }
+    
+    public void ScoreAdd(int newScore)
+    {
+        score += newScore;
         gameScoreText.text = score.ToString();
         overScoreText.text = score.ToString();
     }

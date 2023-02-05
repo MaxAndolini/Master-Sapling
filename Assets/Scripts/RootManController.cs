@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,7 +43,7 @@ public class RootManController : MonoBehaviour
      {
         yield return new WaitForSeconds(waitTime);
         
-        transform.position += new Vector3(0,0,-2) * Time.deltaTime;
+        transform.position += new Vector3(0,0,2) * Time.deltaTime;
         
      }
      IEnumerator WaitForHit(float waitTime, GameObject other)
@@ -54,12 +55,20 @@ public class RootManController : MonoBehaviour
     private void OnCollisionEnter(Collision other) {
          if (other.gameObject.CompareTag("Enemy"))
         {
-            
             isAttack = true;
             Health(other.gameObject);
-            
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("FinishCollider"))
+        {
+            Death();
+        }
+    }
+
+
     private void OnCollisionExit(Collision other) {
         isAttack = false;
         
@@ -102,7 +111,7 @@ public class RootManController : MonoBehaviour
     public void Death()
     {
         isDead = true;
-        GameManager.Instance.numberOfRoots++;
+        GameManager.Instance.AddNumberOfRoots();
         Debug.Log("Death");
         Destroy(gameObject);
     }

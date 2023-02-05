@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     public int numberOfRoots = 2;
     public bool musicOn;
     public bool gameOver;
+    public bool paused = false;
+    public int health = 100;
     public int score;
     public GameObject mainPanel;
     public GameObject pausePanel;
@@ -19,6 +21,7 @@ public class GameManager : MonoBehaviour
     public Sprite musicOffSprite;
     public Text gameScoreText;
     public Text overScoreText;
+    public Healthbar healthbar;
 
     public static GameManager Instance { get; private set; }
 
@@ -38,16 +41,18 @@ public class GameManager : MonoBehaviour
         musicSprite.sprite = musicOn ? musicOnSprite : musicOffSprite;
         pauseMusicSprite.sprite = musicOn ? musicOnSprite : musicOffSprite;
         AudioManager.Instance.Mute(!musicOn);
+        PauseGame();
+        healthbar.UpdateBar(health);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !paused)
             if (numberOfRoots != 0)
             {
                 //rootman_sound.Play();
                 var treePos = tree.transform.position;
-                Instantiate(rootMan, new Vector3(treePos.x, 0.5f, treePos.z - 1.0f), Quaternion.Euler(0f, 180f, 0f));
+                Instantiate(rootMan, new Vector3(treePos.x, treePos.y, treePos.z + 1.0f), Quaternion.identity);
                 numberOfRoots--;
             }
     }
@@ -57,6 +62,7 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.StopMainMenuMusic();
         AudioManager.Instance.PlayInGameMusic();
         AudioManager.Instance.PlaySound("UIClick");
+        ResumeGame();
         mainPanel.SetActive(false);
         pausePanel.SetActive(false);
         gamePanel.SetActive(true);
@@ -76,6 +82,7 @@ public class GameManager : MonoBehaviour
     public void PauseButton()
     {
         AudioManager.Instance.PlaySound("UIOpen");
+        PauseGame();
         mainPanel.SetActive(false);
         pausePanel.SetActive(true);
         gamePanel.SetActive(false);
@@ -88,6 +95,7 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.PlayMainMenuMusic();
         AudioManager.Instance.PlaySound("UIClick");
         gameOver = false;
+        PauseGame();
         ScoreChange(0);
         mainPanel.SetActive(true);
         pausePanel.SetActive(false);
@@ -102,11 +110,13 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.PlaySound("UIClick");
         gameOver = false;
         ScoreChange(0);
+        ResumeGame();
     }
 
     public void UnPauseButton()
     {
         AudioManager.Instance.PlaySound("UIClose");
+        ResumeGame();
         mainPanel.SetActive(false);
         pausePanel.SetActive(false);
         gamePanel.SetActive(true);
@@ -127,14 +137,39 @@ public class GameManager : MonoBehaviour
         overScoreText.text = score.ToString();
     }
 
+    public void AddNumberOfRoots()
+    {
+        numberOfRoots++;
+    }
+
     public void GameOver()
     {
         AudioManager.Instance.StopInGameMusic();
         AudioManager.Instance.PlaySound("GameOverUgh");
+        PauseGame();
         gameOver = true;
         mainPanel.SetActive(false);
         pausePanel.SetActive(false);
         gamePanel.SetActive(false);
         overPanel.SetActive(true);
+    }
+    
+    public void PauseGame()
+    {
+        paused = true;
+        Time.timeScale = 0;
+    }
+    
+    public void ResumeGame()
+    {
+        paused = false;
+        Time.timeScale = 1;
+    }
+
+    public void DecreaseHealth()
+    {
+        health -= 20;
+        if (health > 0) healthbar.UpdateBar(health);
+        else GameOver();
     }
 }

@@ -52,6 +52,15 @@ public class EnemyController : MonoBehaviour
     {
         isAttack = false;
     }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Death();
+            GameManager.Instance.DecreaseHealth();
+        }
+    }
 
     public void Move()
     {
@@ -62,7 +71,7 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
 
-        transform.position += new Vector3(0, 0, 1) * Time.deltaTime;
+        transform.position += new Vector3(0, 0, -2) * Time.deltaTime;
     }
 
     private IEnumerator WaitForHit(float waitTime, GameObject other)

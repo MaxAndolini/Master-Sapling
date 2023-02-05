@@ -5,7 +5,9 @@ public class PlayerController : MonoBehaviour
     public float speed = 10.0f;
     private int position = 3;
     private Vector3[] points = new Vector3[5];
-
+    private bool level2 = false;
+    private bool level3 = false;
+    public GameObject effect;
     void Start()
     {
         // Initialize the position of the 5 points
@@ -21,20 +23,37 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D))
+        if (!GameManager.Instance.paused)
         {
-            if (position < 4)
+            if (Input.GetKeyDown(KeyCode.D))
             {
-                position++;
-                transform.position = points[position];
+                if (position < 4)
+                {
+                    position++;
+                    transform.position = points[position];
+                }
             }
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            if (position > 0)
+
+            if (Input.GetKeyDown(KeyCode.A))
             {
-                position--;
-                transform.position = points[position];
+                if (position > 0)
+                {
+                    position--;
+                    transform.position = points[position];
+                }
+            }
+
+            if (GameManager.Instance.score >= 500 && !level2)
+            {
+                Instantiate(effect, transform.position, Quaternion.identity);
+                GameManager.Instance.numberOfRoots += 2;
+                level2 = true;
+            }
+            else if (GameManager.Instance.score >= 1000 && !level3)
+            {
+                Instantiate(effect, transform.position, Quaternion.identity);
+                GameManager.Instance.numberOfRoots += 2;
+                level3 = true;
             }
         }
     }

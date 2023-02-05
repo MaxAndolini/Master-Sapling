@@ -81,6 +81,11 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.PlaySound("UIClick");
     }
 
+    public void QuitButton()
+    {
+        Application.Quit();
+    }
+
     public void PauseButton()
     {
         AudioManager.Instance.PlaySound("UIOpen");
